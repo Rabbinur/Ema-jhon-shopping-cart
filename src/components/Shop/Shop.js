@@ -9,11 +9,32 @@ import Cart from "../Cart/Cart";
 import Product from "../Product/Product";
 import "./Shop.css";
 
+/*
+for pagination follow this 
+1.count :loaded
+2.how much item you want to show per page:10
+3.how much page you want to add:pages:
+
+
+
+count:loaded
+perPage(size):10 
+pages:count/perPage 
+currentPage(page)
+*/
+
 const Shop = () => {
-  const products = useLoaderData();
+  const { products, count } = useLoaderData();
 
   // const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  //current page initial value 0 theke start
+  const [page, setPage] = useState(0);
+  //size kotogula hbe
+  const [size, setSize] = useState(10);
+  //koita page hbe
+  const pages = Math.ceil(count / size);
+
   // clear cart
   const clearCart = () => {
     setCart([]); //set cart as empty
@@ -95,6 +116,30 @@ const Shop = () => {
             <button>Review Orders</button>
           </Link>
         </Cart>
+      </div>
+      {/* //pagination */}
+      <div className="pagination">
+        <p>
+          Current Selected page:{page} and size:{size}
+        </p>
+        {[...Array(pages).keys()].map((number) => (
+          <button
+            key={number}
+            className={page === number && "selected"}
+            onClick={() => setPage(number)}
+          >
+            {number}
+          </button>
+        ))}
+        {/* for dropdown selection */}
+        <select name="" id="" onChange={(event) => setSize(event.target.value)}>
+          <option value="5">5</option>
+          <option value="10" selected>
+            10
+          </option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
       </div>
     </div>
   );
