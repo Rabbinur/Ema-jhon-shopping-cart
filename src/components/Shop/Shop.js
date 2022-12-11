@@ -24,9 +24,10 @@ currentPage(page)
 */
 
 const Shop = () => {
-  const { products, count } = useLoaderData();
+  // const { products, count } = useLoaderData();
 
-  // const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [count, setCount] = useState(0);
   const [cart, setCart] = useState([]);
   //current page initial value 0 theke start
   const [page, setPage] = useState(0);
@@ -34,6 +35,17 @@ const Shop = () => {
   const [size, setSize] = useState(10);
   //koita page hbe
   const pages = Math.ceil(count / size);
+  //data fecthing by useEffect
+  useEffect(() => {
+    const url = `http://localhost:5000/products?page=${page}&size=${size}`;
+    console.log(page, size);
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        setCount(data.count);
+        setProducts(data.products);
+      });
+  }, [page, size]);
 
   // clear cart
   const clearCart = () => {
@@ -59,7 +71,7 @@ const Shop = () => {
     const saveCart = [];
     for (const id in storedCart) {
       console.log(id);
-      const addedProduct = products.find((product) => product._id == id);
+      const addedProduct = products.find((product) => product._id === id);
       if (addedProduct) {
         //get product quantity by id
         const quantity = storedCart[id];
@@ -128,7 +140,7 @@ const Shop = () => {
             className={page === number && "selected"}
             onClick={() => setPage(number)}
           >
-            {number}
+            {number + 1}
           </button>
         ))}
         {/* for dropdown selection */}
